@@ -59,9 +59,19 @@ services:
     networks:
       - localswarm
 
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    networks:
+      - localswarm
+    volumes:
+      - rddata:/data
+
 volumes:
   dbdata:
   sockdata:
+  rddata:
 
 networks:
   localswarm:
