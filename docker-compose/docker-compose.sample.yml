@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   phpfpm:
-    image: modestcoders/php:7.2-fpm
+    image: modestcoders/php:7.1-fpm
     volumes: &appvolumes
       - ../.composer:/var/www/.composer:delegated
       - ../.composer:/var/www/html/var/composer_home:delegated
@@ -16,7 +16,7 @@ services:
       - localswarm
 
   phpfpm_xdebug:
-    image: modestcoders/php:7.2-fpm
+    image: modestcoders/php:7.1-fpm
     volumes: *appvolumes
     depends_on:
       - phpfpm
