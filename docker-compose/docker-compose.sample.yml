@@ -2,16 +2,26 @@ version: "3.7"
 
 services:
   phpfpm:
-    image: modestcoders/php:7.1-fpm
+    image: modestcoders/php:7.2-fpm
     volumes: &appvolumes
-      - sockdata:/sock
       - ../.composer:/var/www/.composer:delegated
       - ../.composer:/var/www/html/var/composer_home:delegated
       - ./config/dockergento/nginx/conf/default.conf:/var/www/conf/nginx/default.conf:delegated
+      - ./config/dockergento/php/conf/php-fpm.conf:/usr/local/etc/php-fpm.conf:delegated
     environment:
       PHP_IDE_CONFIG: serverName=localhost
     depends_on:
       - db
+    networks:
+      - localswarm
+
+  phpfpm_xdebug:
+    image: modestcoders/php:7.2-fpm
+    volumes: *appvolumes
+    depends_on:
+      - phpfpm
+    networks:
+      - localswarm
 
   nginx:
     image: modestcoders/nginx:1.13
@@ -20,6 +30,9 @@ services:
     volumes: *appvolumes
     depends_on:
       - phpfpm
+      - phpfpm_xdebug
+    networks:
+      - localswarm
 
   db:
     image: mysql:5.7
@@ -32,15 +45,23 @@ services:
       MYSQL_PASSWORD: magento
     volumes:
       - dbdata:/var/lib/mysql
+    networks:
+      - localswarm
 
   node:
-    image: modestcoders/node-php:node8-php7.1
+    image: modestcoders/node-php:node8-php7.2
     ports:
       - 35729:35729
     volumes: *appvolumes
     depends_on:
       - phpfpm
+      - phpfpm_xdebug
+    networks:
+      - localswarm
 
 volumes:
   dbdata:
   sockdata:
+
+networks:
+  localswarm:

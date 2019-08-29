@@ -12,6 +12,7 @@ DOCKER_COMPOSE_FILE_WINDOWS="docker-compose.dev.windows.yml"
 
 SERVICE_APP="nginx"
 SERVICE_PHP="phpfpm"
+SERVICE_PHP_XDEBUG="phpfpm_xdebug"
 SERVICE_DB="db"
 SERVICE_UNISON="unison"
 SERVICE_NODE="node"

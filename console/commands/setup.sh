@@ -69,6 +69,9 @@ if [ "${MAGENTO_DIR}" != "." ]; then
     echo "------ ${DOCKERGENTO_CONFIG_DIR}/nginx/conf/default.conf ------"
     sed_in_file "s#/var/www/html#/var/www/html/${MAGENTO_DIR}#gw /dev/stdout" "${DOCKERGENTO_CONFIG_DIR}/nginx/conf/default.conf"
     echo "--------------------"
+    echo "------ ${DOCKERGENTO_CONFIG_DIR}/php/conf/php-fpm.conf ------"
+    sed_in_file "s#/var/www/html#/var/www/html/${MAGENTO_DIR}#gw /dev/stdout" "${DOCKERGENTO_CONFIG_DIR}/php/conf/php-fpm.conf"
+    echo "--------------------"
     printf "${COLOR_RESET}"
 fi
 

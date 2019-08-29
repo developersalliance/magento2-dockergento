@@ -11,6 +11,9 @@ services:
       - ./composer.lock:/var/www/html/composer.lock:delegated
       # {FILES_IN_GIT}
 
+  phpfpm_xdebug:
+    volumes: *appvolumes-mac
+
   nginx:
     volumes: *appvolumes-mac
 

@@ -8,6 +8,7 @@ command_desc_docker_remove_all="Remove all containers, volumes and images (Confi
 command_desc_docker_stop_all="Stop all running containers"
 command_desc_down="Stop and remove containers, networks, images, and volumes"
 command_desc_exec="Execute a command in a running container [Default container: php]"
+command_desc_exec_debug="Execute a command in a running container [xDebug container: php]"
 command_desc_grunt="Execute grunt commands for frontend development (i.e: grunt exec:theme, grunt watch)"
 command_desc_magento_purge="Remove all magento generated code (caches, generated, static, view_preprocessed)"
 command_desc_magento_urn_generate="Generates the catalog of URNs to *.xsd mappings for the IDE to highlight xml"
