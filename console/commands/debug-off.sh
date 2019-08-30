@@ -3,7 +3,7 @@ set -euo pipefail
 
 ${TASKS_DIR}/start_service_if_not_running.sh ${SERVICE_PHP_XDEBUG}
 
-${COMMANDS_DIR}/exec-xdebug.sh.sh sed -i -e 's/^\zend_extension/;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+${COMMANDS_DIR}/exec-xdebug.sh sed -i -e 's/^\zend_extension/;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 ${COMMANDS_DIR}/stop.sh
 ${COMMANDS_DIR}/start.sh
