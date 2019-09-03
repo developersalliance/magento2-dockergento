@@ -37,7 +37,7 @@ services:
       - localswarm
 
   db:
-    image: mysql:5.7
+    image: percona:5.7
     ports:
       - 3306:3306
     environment:
