@@ -32,6 +32,7 @@ services:
       - phpfpm
       - phpfpm_xdebug
       - redis
+      - adminer
     networks:
       - localswarm
 
@@ -67,6 +68,14 @@ services:
       - localswarm
     volumes:
       - rddata:/data
+
+  adminer:
+    image: adminer
+    restart: always
+    networks:
+      - localswarm
+    ports:
+      - 8080:8080
 
 volumes:
   dbdata:
