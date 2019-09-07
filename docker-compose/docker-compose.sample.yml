@@ -33,6 +33,7 @@ services:
       - phpfpm_xdebug
       - redis
       - adminer
+      - mailhog
     networks:
       - localswarm
 
@@ -76,6 +77,14 @@ services:
       - localswarm
     ports:
       - 8080:8080
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - localswarm
 
 volumes:
   dbdata:
