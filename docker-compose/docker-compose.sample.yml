@@ -64,7 +64,6 @@ services:
 
   redis:
     image: redis:latest
-    restart: always
     networks:
       - localswarm
     volumes:
@@ -72,7 +71,6 @@ services:
 
   adminer:
     image: adminer
-    restart: always
     networks:
       - localswarm
     ports:
