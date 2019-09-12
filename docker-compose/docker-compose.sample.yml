@@ -2,12 +2,11 @@ version: "3.7"
 
 services:
   phpfpm:
-    image: modestcoders/php:7.1-fpm
+    image: devallgento/php:7.1-fpm
     volumes: &appvolumes
       - ../.composer:/var/www/.composer:delegated
       - ../.composer:/var/www/html/var/composer_home:delegated
       - ./config/dockergento/nginx/conf/default.conf:/var/www/conf/nginx/default.conf:delegated
-      - ./config/dockergento/php/conf/php-fpm.conf:/usr/local/etc/php-fpm.conf:delegated
     environment:
       PHP_IDE_CONFIG: serverName=localhost
     depends_on:
@@ -16,7 +15,7 @@ services:
       - localswarm
 
   phpfpm_xdebug:
-    image: modestcoders/php:7.1-fpm
+    image: devallgento/php:7.1-fpm
     volumes: *appvolumes
     depends_on:
       - phpfpm
