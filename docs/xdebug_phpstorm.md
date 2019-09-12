@@ -2,7 +2,7 @@
 
 ## Enable Xdebug
 
-Xdebug needs to be enabled inside the `phpfpm` container. 
+Xdebug needs to be enabled inside the `phpfpm_xdebug` container. 
 
 ```
 dockergento debug-on
@@ -11,7 +11,7 @@ dockergento debug-on
 ## PHPStorm configuration
 
 1. `PHPStorm > Preferences > Languages & Frameworks > PHP > Debug`	
-	* Debug Port: 9001
+	* Debug Port: 9000
 
 	![debug_port](img/debug_port.png)
 
