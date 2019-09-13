@@ -84,7 +84,7 @@ Follow the installation steps for your system.
 1. Clone this repo
 
     ```
-    git clone https://github.com/ModestCoders/magento2-dockergento.git
+    git clone git@github.com:developersalliance/magento2-dockergento.git
     ```
 
 2. Add `dockergento` bin into your `$PATH`
