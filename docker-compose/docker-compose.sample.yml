@@ -15,7 +15,7 @@ services:
       - localswarm
 
   phpfpm_xdebug:
-    image: devallgento/php:7.1-fpm
+    image: devallgento/php:7.1-fpm-xdebug
     volumes: *appvolumes
     depends_on:
       - phpfpm
