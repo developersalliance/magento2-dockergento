@@ -7,13 +7,19 @@ copy_with_consent()
 {
     SOURCE_PATH=$1
     TARGET_PATH=$2
+
     if [[ -e "${TARGET_PATH}" ]]; then
         read -p "overwrite ${TARGET_PATH}? (y/n [n])? " ANSWER_OVERWRITE_TARGET
-        if [ "${ANSWER_OVERWRITE_TARGET}" != "y" ]; then
-            printf "${RED} Setup interrupted. '${TARGET_PATH}' exists. Please remove it and try again.${COLOR_RESET}\n"
-            exit 1
+        if [ "${ANSWER_OVERWRITE_TARGET}" == "y" ]; then
+            create_target_path
         fi
+    else
+        create_target_path
     fi
+}
+
+create_target_path()
+{
     echo " > cp ${SOURCE_PATH} -> ${TARGET_PATH}"
     mkdir -p $(dirname ${TARGET_PATH})
     cp -Rf ${SOURCE_PATH} ${TARGET_PATH}
