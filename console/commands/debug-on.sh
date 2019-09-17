@@ -18,7 +18,7 @@ if [[ "${MACHINE}" == "mac" || "${MACHINE}" == "windows" ]]; then
     # No need to restart because mirror-container.sh already does a restart
     # ${DOCKER_COMPOSE} restart ${SERVICE_PHP}
 else
-    ${DOCKER_COMPOSE} restart ${SERVICE_PHP}
+    ${DOCKER_COMPOSE} restart ${SERVICE_PHP_XDEBUG}
 fi
 
 printf "${YELLOW}xdebug configuration: ${COLOR_RESET}\n"
