@@ -1,6 +1,8 @@
 command_desc_bash="Connect into container using bash [Default container: php]"
 command_desc_composer="Execute composer inside php container"
 command_desc_create_project="Create new magento project inside current directory"
+command_desc_debug_off="Disable xDebug"
+command_desc_debug_on="Enable xDebug"
 command_desc_docker_compose="Execute docker-compose using configuration for your machine"
 command_desc_docker_remove_all="Remove all containers, volumes and images (Confirmation needed)"
 command_desc_docker_stop_all="Stop all running containers"
