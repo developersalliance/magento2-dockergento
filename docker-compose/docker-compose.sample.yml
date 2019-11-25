@@ -7,6 +7,9 @@ services:
       - ../.composer:/var/www/.composer:delegated
       - ../.composer:/var/www/html/var/composer_home:delegated
       - ./config/dockergento/nginx/conf/default.conf:/var/www/conf/nginx/default.conf:delegated
+      - ./.eslintrc-magento:/var/www/html/.eslintrc-magento:delegated
+      - ./.jscsrc:/var/www/html/.jscsrc:delegated
+      - ./.stylelintrc.json:/var/www/html/.stylelintrc.json:delegated
     environment:
       PHP_IDE_CONFIG: serverName=localhost
     depends_on:
@@ -54,6 +57,15 @@ services:
     image: modestcoders/node-php:node8-php7.1
     ports:
       - 35729:35729
+    volumes: *appvolumes
+    depends_on:
+      - phpfpm
+      - phpfpm_xdebug
+    networks:
+      - localswarm
+
+  pipeline:
+    image: devallgento/pipeline:node8-php7.1
     volumes: *appvolumes
     depends_on:
       - phpfpm

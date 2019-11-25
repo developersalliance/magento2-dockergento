@@ -19,6 +19,7 @@ command_desc_mirror_host="(Mac only) Copy and overwrite host content into contai
 command_desc_rebuild="Rebuild docker services with current configuration"
 command_desc_restart="Restart docker services"
 command_desc_run_node="Execute node commands inside node container"
+command_desc_run_pipeline="Execute pipeline commands inside pipeline container"
 command_desc_setup="Dockerize project"
 command_desc_start="Start docker services"
 command_desc_stop="Stop docker services"

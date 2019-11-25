@@ -53,6 +53,11 @@ copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.linux.sa
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.mac.sample.yml" "${DOCKER_COMPOSE_FILE_MAC}"
 #copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.windows.sample.yml" "${DOCKER_COMPOSE_FILE_WINDOWS}"
 
+printf "${GREEN}Setting up code-check files${COLOR_RESET}\n"
+copy_with_consent "${DOCKERGENTO_DIR}/${DOCKERGENTO_CONFIG_DIR}/code-checks/.eslintrc" ".eslintrc"
+copy_with_consent "${DOCKERGENTO_DIR}/${DOCKERGENTO_CONFIG_DIR}/code-checks/.jscsrc" ".jscsrc"
+copy_with_consent "${DOCKERGENTO_DIR}/${DOCKERGENTO_CONFIG_DIR}/code-checks/.stylelintrc.json" ".stylelintrc.json"
+
 read -p "Magento root dir: [${MAGENTO_DIR}] " ANSWER_MAGENTO_DIR
 MAGENTO_DIR=${ANSWER_MAGENTO_DIR:-${MAGENTO_DIR}}
 

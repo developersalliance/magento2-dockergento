@@ -20,6 +20,9 @@ services:
   node:
     volumes: *appvolumes-mac
 
+  pipeline:
+    volumes: *appvolumes-mac
+
   unison:
     image: modestcoders/unison:2.51.2
     volumes:
