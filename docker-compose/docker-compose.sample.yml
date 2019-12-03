@@ -7,7 +7,7 @@ services:
       - ../.composer:/var/www/.composer:delegated
       - ../.composer:/var/www/html/var/composer_home:delegated
       - ./config/dockergento/nginx/conf/default.conf:/var/www/conf/nginx/default.conf:delegated
-      - ./.eslintrc-magento:/var/www/html/.eslintrc-magento:delegated
+      - ./.eslintrc:/var/www/html/.eslintrc:delegated
       - ./.jscsrc:/var/www/html/.jscsrc:delegated
       - ./.stylelintrc.json:/var/www/html/.stylelintrc.json:delegated
     environment:
