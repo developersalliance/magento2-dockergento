@@ -54,7 +54,7 @@ services:
       - localswarm
 
   node:
-    image: modestcoders/node-php:node8-php7.1
+    image: devallgento/pipeline:node8-php7.1
     ports:
       - 35729:35729
     volumes: *appvolumes
