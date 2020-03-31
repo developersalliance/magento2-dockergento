@@ -1,4 +1,5 @@
-command_desc_bash="Connect into container using bash [Default container: php]"
+command_desc_bash="Connect into container using bash. Use --root to connect as a root [Default container: php]"
+command_desc_bashd="Connect into xDebug container using bashd. Use --root to ssh as a root [Default container: php_xdebug]"
 command_desc_composer="Execute composer inside php container"
 command_desc_create_project="Create new magento project inside current directory"
 command_desc_debug_off="Disable xDebug"
