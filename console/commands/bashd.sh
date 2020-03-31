@@ -16,7 +16,7 @@ if [ "$#" != 0 ] && [ "$1" == "--help" ]; then
 fi
 
 if [ "$#" != 0 ] && [ "$1" == "--root" ]; then
-   ${COMMANDS_DIR}/exec-xdebug.sh --root bash
+   ${COMMANDS_DIR}/exec-debug.sh --root bash
 else
-    ${COMMANDS_DIR}/exec-xdebug.sh bash
+    ${COMMANDS_DIR}/exec-debug.sh bash
 fi
