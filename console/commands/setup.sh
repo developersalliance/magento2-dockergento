@@ -149,6 +149,36 @@ add_git_bind_paths_in_file()
     printf "${COLOR_RESET}"
 }
 
+add_custom_paths_in_file()
+{
+    FILE_TO_EDIT=$1
+    SUFFIX_BIND_PATH=$2
+    FILE_PATHS=(auth.json artifacts patches)
+    BIND_PATHS=""
+
+    for i in ${FILE_PATHS[@]}
+    do
+        NEW_PATH="./$i:/var/www/html/$i"
+        BIND_PATH_EXISTS=$(grep -q -e "${NEW_PATH}" ${FILE_TO_EDIT} && echo true || echo false)
+        if [[ "${BIND_PATH_EXISTS}" == true ]]; then
+            continue
+        fi
+        if [ "${BIND_PATHS}" != "" ]; then
+            BIND_PATHS="${BIND_PATHS}\\
+      " # IMPORTANT: This must be a new line with 6 indentation spaces.
+        fi
+        BIND_PATHS="${BIND_PATHS}- ${NEW_PATH}${SUFFIX_BIND_PATH}"
+    done
+
+    printf "${YELLOW}"
+    echo "------ ${FILE_TO_EDIT} ------"
+    sed_in_file "s|# {FILES_IN_GIT}|${BIND_PATHS}|w /dev/stdout" "${FILE_TO_EDIT}"
+    echo "--------------------"
+    printf "${COLOR_RESET}"
+}
+
+add_custom_paths_in_file "${DOCKER_COMPOSE_FILE_MAC}" ":delegated"
+
 #if [[ -f ".git/HEAD" ]]; then
 #    GIT_FILES=$(git ls-files | awk -F / '{print $1}' | uniq)
 #    if [[ "${GIT_FILES}" != "" ]]; then
