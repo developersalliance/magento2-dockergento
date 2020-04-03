@@ -54,9 +54,9 @@ copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.mac.samp
 #copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.windows.sample.yml" "${DOCKER_COMPOSE_FILE_WINDOWS}"
 
 printf "${GREEN}Setting up code-check files${COLOR_RESET}\n"
-copy_with_consent "${DOCKERGENTO_DIR}/${DOCKERGENTO_CONFIG_DIR}/code-checks/.eslintrc" ".eslintrc"
-copy_with_consent "${DOCKERGENTO_DIR}/${DOCKERGENTO_CONFIG_DIR}/code-checks/.jscsrc" ".jscsrc"
-copy_with_consent "${DOCKERGENTO_DIR}/${DOCKERGENTO_CONFIG_DIR}/code-checks/.stylelintrc.json" ".stylelintrc.json"
+copy_with_consent "${DOCKERGENTO_DIR}/code-checks/.eslintrc" ".eslintrc"
+copy_with_consent "${DOCKERGENTO_DIR}/code-checks/.jscsrc" ".jscsrc"
+copy_with_consent "${DOCKERGENTO_DIR}/code-checks/.stylelintrc.json" ".stylelintrc.json"
 
 read -p "Magento root dir: [${MAGENTO_DIR}] " ANSWER_MAGENTO_DIR
 MAGENTO_DIR=${ANSWER_MAGENTO_DIR:-${MAGENTO_DIR}}
@@ -149,17 +149,17 @@ add_git_bind_paths_in_file()
     printf "${COLOR_RESET}"
 }
 
-if [[ -f ".git/HEAD" ]]; then
-    GIT_FILES=$(git ls-files | awk -F / '{print $1}' | uniq)
-    if [[ "${GIT_FILES}" != "" ]]; then
-        add_git_bind_paths_in_file "${GIT_FILES}" "${DOCKER_COMPOSE_FILE_MAC}" ":delegated"
-#        add_git_bind_paths_in_file "${GIT_FILES}" "${DOCKER_COMPOSE_FILE_WINDOWS}" ""
-    else
-        echo " > Skipped. There are no files added in this repository"
-    fi
-else
-    echo " > Skipped. This is not a git repository"
-fi
+#if [[ -f ".git/HEAD" ]]; then
+#    GIT_FILES=$(git ls-files | awk -F / '{print $1}' | uniq)
+#    if [[ "${GIT_FILES}" != "" ]]; then
+#        add_git_bind_paths_in_file "${GIT_FILES}" "${DOCKER_COMPOSE_FILE_MAC}" ":delegated"
+##        add_git_bind_paths_in_file "${GIT_FILES}" "${DOCKER_COMPOSE_FILE_WINDOWS}" ""
+#    else
+#        echo " > Skipped. There are no files added in this repository"
+#    fi
+#else
+#    echo " > Skipped. This is not a git repository"
+#fi
 
 echo "PHP version:"
 DEFAULT_PHP_VERSION="7.1"
