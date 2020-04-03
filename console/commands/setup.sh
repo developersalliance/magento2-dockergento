@@ -158,6 +158,11 @@ add_custom_paths_in_file()
 
     for i in ${FILE_PATHS[@]}
     do
+        if [[ ! -d "$i" ]] && \
+           [[ ! -f "$i" ]]; then
+            continue
+        fi
+
         NEW_PATH="./$i:/var/www/html/$i"
         BIND_PATH_EXISTS=$(grep -q -e "${NEW_PATH}" ${FILE_TO_EDIT} && echo true || echo false)
         if [[ "${BIND_PATH_EXISTS}" == true ]]; then
