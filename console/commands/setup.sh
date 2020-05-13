@@ -153,7 +153,7 @@ add_custom_paths_in_file()
 {
     FILE_TO_EDIT=$1
     SUFFIX_BIND_PATH=$2
-    FILE_PATHS=(auth.json artifacts patches)
+    FILE_PATHS=(auth.json artifacts patches .gitignore)
     BIND_PATHS=""
 
     for i in ${FILE_PATHS[@]}
