@@ -25,6 +25,17 @@ services:
     networks:
       - localswarm
 
+  varnish:
+    image: devallgento/varnish
+    ports:
+      - 8080:80
+    depends_on:
+      - nginx
+    environment:
+      - VIRTUAL_PORT=80
+    networks:
+      - localswarm
+
   nginx:
     image: modestcoders/nginx:1.13
     ports:
@@ -54,7 +65,7 @@ services:
       - localswarm
 
   node:
-    image: modestcoders/node-php:node8-php7.1
+    image: devallgento/node-php:node8-php7.1
     ports:
       - 35729:35729
     volumes: *appvolumes
@@ -85,7 +96,7 @@ services:
     networks:
       - localswarm
     ports:
-      - 8080:8080
+      - 8090:8080
 
   mailhog:
     image: mailhog/mailhog
@@ -95,10 +106,25 @@ services:
     networks:
       - localswarm
 
+  elasticsearch:
+    tty: true
+    image: devallgento/elasticsearch:6.7.1
+    environment:
+      - discovery.type=single-node # may not have an effect
+      - xpack.security.enabled=false
+      - ELASTIC_USERNAME=username
+      - ELASTIC_PASSWORD=password
+    ports:
+      - 9200:9200
+    networks:
+      - localswarm
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
 volumes:
   dbdata:
-  sockdata:
   rddata:
+  esdata:
 
 networks:
   localswarm:
