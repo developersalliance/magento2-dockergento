@@ -75,15 +75,6 @@ services:
     networks:
       - localswarm
 
-  pipeline:
-    image: devallgento/pipeline:node8-php7.1
-    volumes: *appvolumes
-    depends_on:
-      - phpfpm
-      - phpfpm_xdebug
-    networks:
-      - localswarm
-
   redis:
     image: redis:latest
     networks:
