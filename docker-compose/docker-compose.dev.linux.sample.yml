@@ -13,6 +13,3 @@ services:
 
   node:
     volumes: *appvolumes-linux
-
-  pipeline:
-    volumes: *appvolumes-linux

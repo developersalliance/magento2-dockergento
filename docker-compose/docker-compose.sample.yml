@@ -112,6 +112,16 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
 
+  kibana:
+    image: kibana:7.7.1
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    networks:
+      - localswarm
+
 volumes:
   dbdata:
   rddata:
