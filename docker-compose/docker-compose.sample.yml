@@ -3,6 +3,8 @@ version: "3.7"
 services:
   phpfpm:
     image: devallgento/php:7.1-fpm
+    ports:
+      - "2222:22"
     volumes: &appvolumes
       - ../.composer:/var/www/.composer:delegated
       - ../.composer:/var/www/html/var/composer_home:delegated
