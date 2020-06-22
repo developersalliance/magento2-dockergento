@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "${MACHINE}" == "mac" || "${MACHINE}" == "windows" ]]; then
+if [[ "${MACHINE}" == "windows" ]]; then
     BIND_MOUNT_PATH=$(${TASKS_DIR}/get_bind_mount_path.sh "${WORKDIR_PHP}/${MAGENTO_DIR}/vendor")
     if [[ ${BIND_MOUNT_PATH} != false ]]; then
         echo ""
