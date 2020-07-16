@@ -43,8 +43,6 @@ services:
     depends_on:
       - phpfpm
       - phpfpm_xdebug
-      - redis
-      - adminer
       - mailhog
     networks:
       - localswarm
@@ -98,7 +96,7 @@ services:
 
   elasticsearch:
     tty: true
-    image: devallgento/elasticsearch:6.7.1
+    image: elasticsearch:6.7.1
     environment:
       - discovery.type=single-node # may not have an effect
       - xpack.security.enabled=false
@@ -108,6 +106,8 @@ services:
       - 9200:9200
     networks:
       - localswarm
+    depends_on:
+      - kibana
     volumes:
       - esdata:/usr/share/elasticsearch/data
 
@@ -118,6 +118,17 @@ services:
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    networks:
+      - localswarm
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 15672:15672
+      - 5672:5672
     networks:
       - localswarm
 

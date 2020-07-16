@@ -7,19 +7,13 @@ copy_with_consent()
 {
     SOURCE_PATH=$1
     TARGET_PATH=$2
-
     if [[ -e "${TARGET_PATH}" ]]; then
         read -p "overwrite ${TARGET_PATH}? (y/n [n])? " ANSWER_OVERWRITE_TARGET
-        if [ "${ANSWER_OVERWRITE_TARGET}" == "y" ]; then
-            create_target_path
+        if [ "${ANSWER_OVERWRITE_TARGET}" != "y" ]; then
+            printf "${RED} Setup interrupted. '${TARGET_PATH}' exists. Please remove it and try again.${COLOR_RESET}\n"
+            exit 1
         fi
-    else
-        create_target_path
     fi
-}
-
-create_target_path()
-{
     echo " > cp ${SOURCE_PATH} -> ${TARGET_PATH}"
     mkdir -p $(dirname ${TARGET_PATH})
     cp -Rf ${SOURCE_PATH} ${TARGET_PATH}
@@ -52,11 +46,6 @@ copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.sample.yml" 
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.linux.sample.yml" "${DOCKER_COMPOSE_FILE_LINUX}"
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.mac.sample.yml" "${DOCKER_COMPOSE_FILE_MAC}"
 #copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.windows.sample.yml" "${DOCKER_COMPOSE_FILE_WINDOWS}"
-
-printf "${GREEN}Setting up code-check files${COLOR_RESET}\n"
-copy_with_consent "${DOCKERGENTO_DIR}/code-checks/.eslintrc" ".eslintrc"
-copy_with_consent "${DOCKERGENTO_DIR}/code-checks/.jscsrc" ".jscsrc"
-copy_with_consent "${DOCKERGENTO_DIR}/code-checks/.stylelintrc.json" ".stylelintrc.json"
 
 read -p "Magento root dir: [${MAGENTO_DIR}] " ANSWER_MAGENTO_DIR
 MAGENTO_DIR=${ANSWER_MAGENTO_DIR:-${MAGENTO_DIR}}
@@ -149,52 +138,17 @@ add_git_bind_paths_in_file()
     printf "${COLOR_RESET}"
 }
 
-add_custom_paths_in_file()
-{
-    FILE_TO_EDIT=$1
-    SUFFIX_BIND_PATH=$2
-    FILE_PATHS=(auth.json artifacts patches .gitignore m2-hotfixes)
-    BIND_PATHS=""
-
-    for i in ${FILE_PATHS[@]}
-    do
-        if [[ ! -d "$i" ]] && \
-           [[ ! -f "$i" ]]; then
-            continue
-        fi
-
-        NEW_PATH="./$i:/var/www/html/$i"
-        BIND_PATH_EXISTS=$(grep -q -e "${NEW_PATH}" ${FILE_TO_EDIT} && echo true || echo false)
-        if [[ "${BIND_PATH_EXISTS}" == true ]]; then
-            continue
-        fi
-        if [ "${BIND_PATHS}" != "" ]; then
-            BIND_PATHS="${BIND_PATHS}\\
-      " # IMPORTANT: This must be a new line with 6 indentation spaces.
-        fi
-        BIND_PATHS="${BIND_PATHS}- ${NEW_PATH}${SUFFIX_BIND_PATH}"
-    done
-
-    printf "${YELLOW}"
-    echo "------ ${FILE_TO_EDIT} ------"
-    sed_in_file "s|# {FILES_IN_GIT}|${BIND_PATHS}|w /dev/stdout" "${FILE_TO_EDIT}"
-    echo "--------------------"
-    printf "${COLOR_RESET}"
-}
-
-add_custom_paths_in_file "${DOCKER_COMPOSE_FILE_MAC}" ":delegated"
-
-#if [[ -f ".git/HEAD" ]]; then
-#    GIT_FILES=$(git ls-files | awk -F / '{print $1}' | uniq)
-#    if [[ "${GIT_FILES}" != "" ]]; then
-#        add_git_bind_paths_in_file "${GIT_FILES}" "${DOCKER_COMPOSE_FILE_MAC}" ":delegated"
-##        add_git_bind_paths_in_file "${GIT_FILES}" "${DOCKER_COMPOSE_FILE_WINDOWS}" ""
-#    else
-#        echo " > Skipped. There are no files added in this repository"
-#    fi
-#else
-#    echo " > Skipped. This is not a git repository"
-#fi
+if [[ -f ".git/HEAD" ]]; then
+    GIT_FILES=$(git ls-files | awk -F / '{print $1}' | uniq)
+    if [[ "${GIT_FILES}" != "" ]]; then
+        add_git_bind_paths_in_file "${GIT_FILES}" "${DOCKER_COMPOSE_FILE_MAC}" ":delegated"
+#        add_git_bind_paths_in_file "${GIT_FILES}" "${DOCKER_COMPOSE_FILE_WINDOWS}" ""
+    else
+        echo " > Skipped. There are no files added in this repository"
+    fi
+else
+    echo " > Skipped. This is not a git repository"
+fi
 
 echo "PHP version:"
 DEFAULT_PHP_VERSION="7.1"
@@ -220,11 +174,21 @@ if [ "${PHP_VERSION}" != "${DEFAULT_PHP_VERSION}" ]; then
     printf "${COLOR_RESET}\n"
 fi
 
+read -p "[OPTIONAL] Docker compose project name: [${COMPOSER_PROJECT_NAME-}]" ANSWER_PROJECT_NAME
+PROJECT_NAME=${ANSWER_PROJECT_NAME-}
+if [[ ! -z "${PROJECT_NAME}" ]];then
+    printf "${GREEN}Setting custom project name: '${PROJECT_NAME}'\n"
+    printf "This will serve as docker object (container, volume, network) prefix.\n"
+    printf "${COLOR_RESET}"
+    COMPOSE_PROJECT_NAME="${PROJECT_NAME}"
+fi
+
 printf "${GREEN}Saving custom properties file: '${DOCKERGENTO_CONFIG_DIR}/properties'${COLOR_RESET}\n"
 cat << EOF > ./${DOCKERGENTO_CONFIG_DIR}/properties
 MAGENTO_DIR="${MAGENTO_DIR}"
 COMPOSER_DIR="${COMPOSER_DIR}"
 BIN_DIR="${BIN_DIR}"
+COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME}"
 EOF
 
 # Stop running containers in case that setup was executed in an already running project

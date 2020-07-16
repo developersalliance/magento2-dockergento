@@ -46,7 +46,7 @@ do
 
     echo " > validating and sanitizing path: '${PATH_TO_MIRROR}'"
     PATH_TO_MIRROR=$(sanitize_mirror_path "${PATH_TO_MIRROR}")
-    validate_mirror_host_path "${PATH_TO_MIRROR}"
+    #validate_mirror_host_path "${PATH_TO_MIRROR}"
 
     SRC_PATH="${PATH_TO_MIRROR}"
     DEST_PATH="${PATH_TO_MIRROR}"
