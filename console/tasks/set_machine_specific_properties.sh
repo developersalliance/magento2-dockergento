@@ -11,10 +11,6 @@ case "${UNAMEOUT}" in
         MACHINE="mac"
         DOCKER_COMPOSE_FILE_MACHINE="${DOCKER_COMPOSE_FILE_MAC}"
         ;;
-#    MINGW64_NT-10.0*)
-#        MACHINE="windows"
-#        DOCKER_COMPOSE_FILE_MACHINE="${DOCKER_COMPOSE_FILE_WINDOWS}"
-#        ;;
     *)
         MACHINE="UNKNOWN"
         ;;

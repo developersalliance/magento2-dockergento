@@ -4,12 +4,6 @@ services:
   phpfpm:
     volumes: &appvolumes-mac
       - workspace:/var/www/html
-      - ./app:/var/www/html/app:delegated
-      - ./.git:/var/www/html/.git:delegated
-      - ./config:/var/www/html/config:delegated
-      - ./composer.json:/var/www/html/composer.json:delegated
-      - ./composer.lock:/var/www/html/composer.lock:delegated
-      # {FILES_IN_GIT}
 
   phpfpm_xdebug:
     volumes: *appvolumes-mac

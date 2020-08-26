@@ -1,0 +1,38 @@
+sync:
+  defaults:
+    mode: two-way-resolved
+    symlink:
+      mode: "posix-raw"
+    permissions:
+      defaultFileMode: "0644"
+      defaultDirectoryMode: "0755"
+    ignore:
+      vcs: true
+      paths:
+        # System files
+        - ".DS_Store"
+        - "._*"
+
+        # Vim files
+        - "*~"
+        - "*.sw[a-p]"
+
+        # Magento files
+        - "/pub/static/**"
+        - "!/pub/static/.htaccess"
+
+        - "/node_modules/**"
+
+        - "/config"
+
+        - "/var/**"
+        - "!/var/.htaccess"
+
+        # IDE, misc files
+        - ".idea"
+        - ".magento"
+        - ".docker"
+        - "*.gz"
+        - "*.zip"
+        - "*.bz2"
+        - ".github"

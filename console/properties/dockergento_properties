@@ -8,7 +8,6 @@ HOST_DIR="."
 DOCKER_COMPOSE_FILE="docker-compose.yml"
 DOCKER_COMPOSE_FILE_LINUX="docker-compose.dev.linux.yml"
 DOCKER_COMPOSE_FILE_MAC="docker-compose.dev.mac.yml"
-DOCKER_COMPOSE_FILE_WINDOWS="docker-compose.dev.windows.yml"
 
 SERVICE_APP="nginx"
 SERVICE_PHP="phpfpm"
@@ -24,3 +23,5 @@ GROUP_PHP="app"
 WORKDIR_PHP="/var/www/html"
 
 COMPOSE_PROJECT_NAME=""
+USE_MUTAGEN_SYNC="1"
+MUTAGEN_CONFIG=./config/dockergento/

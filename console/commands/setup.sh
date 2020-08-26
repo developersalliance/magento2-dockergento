@@ -45,7 +45,6 @@ copy_with_consent "${DOCKERGENTO_DIR}/${DOCKERGENTO_CONFIG_DIR}/" "${DOCKERGENTO
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.sample.yml" "${DOCKER_COMPOSE_FILE}"
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.linux.sample.yml" "${DOCKER_COMPOSE_FILE_LINUX}"
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.mac.sample.yml" "${DOCKER_COMPOSE_FILE_MAC}"
-#copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.windows.sample.yml" "${DOCKER_COMPOSE_FILE_WINDOWS}"
 
 read -p "Magento root dir: [${MAGENTO_DIR}] " ANSWER_MAGENTO_DIR
 MAGENTO_DIR=${ANSWER_MAGENTO_DIR:-${MAGENTO_DIR}}
@@ -61,11 +60,6 @@ if [ "${MAGENTO_DIR}" != "." ]; then
 	sed_in_file "s#/app:#/${MAGENTO_DIR}/app:#gw /dev/stdout" "${DOCKER_COMPOSE_FILE_MAC}"
 	sed_in_file "s#/vendor#/${MAGENTO_DIR}/vendor#gw /dev/stdout" "${DOCKER_COMPOSE_FILE_MAC}"
     echo "--------------------"
-#    echo "------ ${DOCKER_COMPOSE_FILE_WINDOWS} ------"
-#	sed_in_file "s#/app:#/${MAGENTO_DIR}/app:#gw /dev/stdout" "${DOCKER_COMPOSE_FILE_WINDOWS}"
-#	sed_in_file "s#/html/app#/html/${MAGENTO_DIR}/app#gw /dev/stdout" "${DOCKER_COMPOSE_FILE_WINDOWS}"
-#	sed_in_file "s#/vendor#/${MAGENTO_DIR}/vendor#gw /dev/stdout" "${DOCKER_COMPOSE_FILE_WINDOWS}"
-#    echo "--------------------"
     echo "------ ${DOCKERGENTO_CONFIG_DIR}/nginx/conf/default.conf ------"
     sed_in_file "s#/var/www/html#/var/www/html/${MAGENTO_DIR}#gw /dev/stdout" "${DOCKERGENTO_CONFIG_DIR}/nginx/conf/default.conf"
     echo "--------------------"
@@ -83,10 +77,6 @@ if [ "${COMPOSER_DIR}" != "." ]; then
 	sed_in_file "s#/composer.json#/${COMPOSER_DIR}/composer.json#gw /dev/stdout" "${DOCKER_COMPOSE_FILE_MAC}"
 	sed_in_file "s#/composer.lock#/${COMPOSER_DIR}/composer.lock#gw /dev/stdout" "${DOCKER_COMPOSE_FILE_MAC}"
     echo "--------------------"
-#    echo "------ ${DOCKER_COMPOSE_FILE_WINDOWS} ------"
-#	sed_in_file "s#/composer.json#/${COMPOSER_DIR}/composer.json#gw /dev/stdout" "${DOCKER_COMPOSE_FILE_WINDOWS}"
-#	sed_in_file "s#/composer.lock#/${COMPOSER_DIR}/composer.lock#gw /dev/stdout" "${DOCKER_COMPOSE_FILE_WINDOWS}"
-#    echo "--------------------"
     printf "${COLOR_RESET}\n"
 fi
 
@@ -142,7 +132,6 @@ if [[ -f ".git/HEAD" ]]; then
     GIT_FILES=$(git ls-files | awk -F / '{print $1}' | uniq)
     if [[ "${GIT_FILES}" != "" ]]; then
         add_git_bind_paths_in_file "${GIT_FILES}" "${DOCKER_COMPOSE_FILE_MAC}" ":delegated"
-#        add_git_bind_paths_in_file "${GIT_FILES}" "${DOCKER_COMPOSE_FILE_WINDOWS}" ""
     else
         echo " > Skipped. There are no files added in this repository"
     fi
@@ -200,7 +189,6 @@ echo ""
 echo "   Docker bind paths were automatically added here:"
 echo ""
 echo "      * ${DOCKER_COMPOSE_FILE_MAC}"
-#echo "     * ${DOCKER_COMPOSE_FILE_WINDOWS}"
 echo ""
 echo "   Please check that they are right or edit them accordingly."
 echo "   Be aware that vendor cannot be bound for performance reasons."
