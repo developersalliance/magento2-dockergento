@@ -1,141 +1,140 @@
 version: "3.7"
 
 services:
-  phpfpm:
-    image: devallgento/php:7.1-fpm
-    ports:
-      - "2222:22"
-    volumes: &appvolumes
-      - ../.composer:/var/www/.composer:delegated
-      - ../.composer:/var/www/html/var/composer_home:delegated
-      - ./config/dockergento/nginx/conf/default.conf:/var/www/conf/nginx/default.conf:delegated
-    environment:
-      PHP_IDE_CONFIG: serverName=localhost
-    depends_on:
-      - db
-    networks:
-      - localswarm
+    phpfpm:
+        image: devallgento/php:7.3-fpm
+        volumes: &appvolumes
+            - ../.composer:/var/www/.composer:delegated
+            - ../.composer:/var/www/html/var/composer_home:delegated
+            - ./config/dockergento/nginx/conf/default.conf:/var/www/conf/nginx/default.conf:delegated
+        environment:
+            PHP_IDE_CONFIG: serverName=localhost
+        depends_on:
+            - db
+        networks:
+            - localswarm
 
-  phpfpm_xdebug:
-    image: devallgento/php:7.1-fpm
-    volumes: *appvolumes
-    depends_on:
-      - phpfpm
-    networks:
-      - localswarm
+    phpfpm_xdebug:
+        image: devallgento/php:7.3-fpm
+        volumes: *appvolumes
+        depends_on:
+            - phpfpm
+        networks:
+            - localswarm
 
-  varnish:
-    image: devallgento/varnish
-    ports:
-      - 8080:80
-    depends_on:
-      - nginx
-    environment:
-      - VIRTUAL_PORT=80
-    networks:
-      - localswarm
+#    varnish:
+#        image: devallgento/varnish
+#        ports:
+#            - 8080:80
+#        depends_on:
+#            - nginx
+#        environment:
+#            - VIRTUAL_PORT=80
+#        networks:
+#            - localswarm
 
-  nginx:
-    image: modestcoders/nginx:1.13
-    ports:
-      - 80:8000
-    volumes: *appvolumes
-    depends_on:
-      - phpfpm
-      - phpfpm_xdebug
-      - mailhog
-    networks:
-      - localswarm
+    nginx:
+        image: modestcoders/nginx:1.13
+        ports:
+            - 80:8000
+        volumes: *appvolumes
+        depends_on:
+            - phpfpm
+            - phpfpm_xdebug
+            - mailhog
+        networks:
+            - localswarm
 
-  db:
-    image: percona:5.7
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: magento
-      MYSQL_USER: magento
-      MYSQL_PASSWORD: magento
-    volumes:
-      - dbdata:/var/lib/mysql
-    networks:
-      - localswarm
+    db:
+        image: percona:5.7
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: magento
+            MYSQL_USER: magento
+            MYSQL_PASSWORD: magento
+        volumes:
+            - dbdata:/var/lib/mysql
+        networks:
+            - localswarm
 
-  node:
-    image: devallgento/node-php:node8-php7.1
-    ports:
-      - 35729:35729
-    volumes: *appvolumes
-    depends_on:
-      - phpfpm
-      - phpfpm_xdebug
-    networks:
-      - localswarm
+    node:
+        image: devallgento/node-php:node8-php7.1
+        ports:
+            - 35729:35729
+        volumes: *appvolumes
+        depends_on:
+            - phpfpm
+            - phpfpm_xdebug
+        networks:
+            - localswarm
 
-  redis:
-    image: redis:latest
-    networks:
-      - localswarm
-    volumes:
-      - rddata:/data
+    redis:
+        image: redis:latest
+        networks:
+            - localswarm
+        volumes:
+            - rddata:/data
 
-  adminer:
-    image: adminer
-    networks:
-      - localswarm
-    ports:
-      - 8090:8080
+    mailhog:
+        image: mailhog/mailhog
+        ports:
+            - 1025:1025
+            - 8025:8025
+        networks:
+            - localswarm
 
-  mailhog:
-    image: mailhog/mailhog
-    ports:
-      - 1025:1025
-      - 8025:8025
-    networks:
-      - localswarm
+    elasticsearch:
+        tty: true
+        image: elasticsearch:7.7.1
+        environment:
+            - discovery.type=single-node
+            - xpack.security.enabled=false
+            - ELASTIC_USERNAME=username
+            - ELASTIC_PASSWORD=password
+        ports:
+            - 9200:9200
+        networks:
+            - localswarm
+        depends_on:
+            - kibana
+        volumes:
+            - esdata:/usr/share/elasticsearch/data
 
-  elasticsearch:
-    tty: true
-    image: elasticsearch:6.7.1
-    environment:
-      - discovery.type=single-node # may not have an effect
-      - xpack.security.enabled=false
-      - ELASTIC_USERNAME=username
-      - ELASTIC_PASSWORD=password
-    ports:
-      - 9200:9200
-    networks:
-      - localswarm
-    depends_on:
-      - kibana
-    volumes:
-      - esdata:/usr/share/elasticsearch/data
+    kibana:
+        image: kibana:7.7.1
+        environment:
+            ELASTICSEARCH_URL: http://elasticsearch:9200
+            ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+        ports:
+            - 5601:5601
+        networks:
+            - localswarm
 
-  kibana:
-    image: kibana:7.7.1
-    ports:
-      - 5601:5601
-    environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
-      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-    networks:
-      - localswarm
+    rabbitmq:
+        image: rabbitmq:3-management
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+        ports:
+            - 15672:15672
+            - 5672:5672
+        networks:
+            - localswarm
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    ports:
-      - 15672:15672
-      - 5672:5672
-    networks:
-      - localswarm
+    grpcui:
+        image: wongnai/grpcui
+        ports:
+            - 8080:8080
+        networks:
+            - localswarm
+        entrypoint: [ "grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/html/repositories/mount/catalogStorefrontCe", "phpfpm:9001" ]
 
 volumes:
-  dbdata:
-  rddata:
-  esdata:
+    dbdata:
+    rddata:
+    esdata:
 
 networks:
-  localswarm:
+    localswarm:

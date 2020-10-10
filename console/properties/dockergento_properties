@@ -10,6 +10,7 @@ DOCKER_COMPOSE_FILE_LINUX="docker-compose.dev.linux.yml"
 DOCKER_COMPOSE_FILE_MAC="docker-compose.dev.mac.yml"
 
 SERVICE_APP="nginx"
+SERVICE_GRPC="grpcui"
 SERVICE_PHP="phpfpm"
 SERVICE_PHP_XDEBUG="phpfpm_xdebug"
 SERVICE_DB="db"
