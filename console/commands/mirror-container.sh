@@ -34,11 +34,6 @@ if [[ "$1" == "--force" || "$1" == "-f" ]]; then
     shift
 fi
 
-# IMPORTANT:
-# Docker cp from container to host needs to be done in a not running container.
-# Otherwise the docker.hyperkit gets crazy and breaks the bind mounts
-${COMMANDS_DIR}/stop.sh
-
 source ${TASKS_DIR}/mirror_path.sh
 
 clear_dest_dir()
@@ -80,6 +75,3 @@ do
 done
 
 printf "${GREEN}Container mirrored into host${COLOR_RESET}\n"
-
-# Start containers again because we needed to stop them before mirroring
-${COMMANDS_DIR}/start.sh
