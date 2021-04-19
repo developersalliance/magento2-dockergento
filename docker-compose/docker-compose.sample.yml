@@ -48,7 +48,7 @@ services:
       - localswarm
 
   db:
-    image: percona:5.7
+    image: mysql:5.7
     ports:
       - 3306:3306
     environment:
@@ -96,7 +96,7 @@ services:
 
   elasticsearch:
     tty: true
-    image: elasticsearch:6.7.1
+    image: elasticsearch:7.7.1
     environment:
       - discovery.type=single-node # may not have an effect
       - xpack.security.enabled=false
@@ -106,8 +106,6 @@ services:
       - 9200:9200
     networks:
       - localswarm
-    depends_on:
-      - kibana
     volumes:
       - esdata:/usr/share/elasticsearch/data
 

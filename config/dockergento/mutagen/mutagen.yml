@@ -28,6 +28,14 @@ sync:
         - "/var/**"
         - "!/var/.htaccess"
 
+        - "/dev/tests/**"
+
+        - "/generated/**"
+        - "!/generated/.htaccess"
+
+        - "/vendor/**"
+        - "!/vendor/.htaccess"
+
         # IDE, misc files
         - ".idea"
         - ".magento"
