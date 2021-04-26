@@ -30,11 +30,11 @@ sync:
 
         - "/dev/tests/**"
 
-        - "/generated/**"
-        - "!/generated/.htaccess"
+        #- "/generated/**"
+        #- "!/generated/.htaccess"
 
-        - "/vendor/**"
-        - "!/vendor/.htaccess"
+        #- "/vendor/**"
+        #- "!/vendor/.htaccess"
 
         # IDE, misc files
         - ".idea"
