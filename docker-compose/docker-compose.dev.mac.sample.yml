@@ -1,18 +1,23 @@
-version: "3.7"
+version: '3'
 
 services:
-  phpfpm:
-    volumes: &appvolumes-mac
-      - workspace:/var/www/html
+    frontend:
+        volumes: &appvolumes-mac
+            - workspace_frontend:/var/www/html
 
-  phpfpm_xdebug:
-    volumes: *appvolumes-mac
+    phpfpm:
+        volumes: &appvolumes-mac
+            - workspace:/var/www/html
 
-  nginx:
-    volumes: *appvolumes-mac
+    phpfpm_xdebug:
+        volumes: *appvolumes-mac
 
-  node:
-    volumes: *appvolumes-mac
+    nginx:
+        volumes: *appvolumes-mac
+
+    node:
+        volumes: *appvolumes-mac
 
 volumes:
-  workspace:
+    workspace:
+    workspace_frontend:

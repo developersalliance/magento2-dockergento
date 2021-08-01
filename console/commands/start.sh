@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-printf "${GREEN}Starting containers in detached mode${COLOR_RESET}\n"
+printf "${GREEN}Starting backend containers in detached mode${COLOR_RESET}\n"
+${DOCKER_COMPOSE} up -d ${SERVICE_APP}
 
-if [ "$#" == 0 ]; then
-    ${DOCKER_COMPOSE} up -d ${SERVICE_APP}
-else
-    ${DOCKER_COMPOSE} up -d "$@"
-fi
+printf "${GREEN}Starting frontend containers in detached mode${COLOR_RESET}\n"
+${DOCKER_COMPOSE} up -d ${SERVICE_FRONTEND}
 
 ${TASKS_DIR}/validate_bind_mounts.sh
 
@@ -23,5 +21,9 @@ fi
 if [[ "${MACHINE}" == "mac" && "${USE_MUTAGEN_SYNC}" == "1" ]]; then
     echo " > starting mutagen sync session"
     ${TASKS_DIR}/mutagen_sync.sh start
+    printf " > mutagen sync started\n"
+
+    echo " > starting mutagen frontend sync session"
+    ${TASKS_DIR}/mutagen_sync_frontend.sh start
     printf " > mutagen sync started\n"
 fi

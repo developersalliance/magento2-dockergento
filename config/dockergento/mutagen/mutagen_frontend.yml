@@ -16,25 +16,10 @@ sync:
                 # Vim files
                 - "*~"
                 - "*.sw[a-p]"
-
-                # Magento files
-                - "/pub/static/**"
-                - "!/pub/static/.htaccess"
-
-                - "/node_modules/**"
-
                 - "/config"
 
                 - "/var/**"
                 - "!/var/.htaccess"
-
-                - "/dev/tests/**"
-
-                #- "/generated/**"
-                #- "!/generated/.htaccess"
-
-                #- "/vendor/**"
-                #- "!/vendor/.htaccess"
 
                 # IDE, misc files
                 - ".idea"

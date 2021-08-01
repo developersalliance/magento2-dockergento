@@ -1,7 +1,8 @@
-MAGENTO_DIR="."
-COMPOSER_DIR="."
-BIN_DIR="./vendor/bin"
-GENERATED_DIR="generated" # Set to "var/generation" for magento >=2.1
+MAGENTO_DIR="./backend"
+FRONTEND_DIR="./frontend"
+COMPOSER_DIR="./backend"
+BIN_DIR="./backend/vendor/bin"
+GENERATED_DIR="./backend/generated" # Set to "var/generation" for magento >=2.1
 
 HOST_DIR="."
 
@@ -9,6 +10,7 @@ DOCKER_COMPOSE_FILE="docker-compose.yml"
 DOCKER_COMPOSE_FILE_LINUX="docker-compose.dev.linux.yml"
 DOCKER_COMPOSE_FILE_MAC="docker-compose.dev.mac.yml"
 
+SERVICE_FRONTEND="frontend"
 SERVICE_APP="nginx"
 SERVICE_PHP="phpfpm"
 SERVICE_PHP_XDEBUG="phpfpm_xdebug"
@@ -21,6 +23,7 @@ SERVICES_WITH_LINUX_PERMISSIONS_ISSUES="${SERVICE_APP} ${SERVICE_PHP}"
 USER_PHP="app"
 GROUP_PHP="app"
 WORKDIR_PHP="/var/www/html"
+WORKDIR_FRONTEND="/usr/src/app"
 
 COMPOSE_PROJECT_NAME=""
 USE_MUTAGEN_SYNC="1"
