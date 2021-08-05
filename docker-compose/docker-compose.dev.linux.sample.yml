@@ -2,7 +2,7 @@ version: '3'
 
 services:
     frontend:
-        volumes: &appvolumes-frontend-linux
+        volumes:
             - ./frontend:/var/www/html
 
     phpfpm:

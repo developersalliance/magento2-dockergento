@@ -10,7 +10,7 @@ fi
 PHP_CONTAINER_ID=$(${DOCKER_COMPOSE} ps -q ${SERVICE_PHP})
 SYNC_NAME="dockergento_backend"
 CODE_SYNC_ALPHA="$(pwd -P)/$MAGENTO_DIR"
-CODE_SYNC_BETA="docker://$PHP_CONTAINER_ID$WORKDIR_PHP/$MAGENTO_DIR"
+CODE_SYNC_BETA="docker://$PHP_CONTAINER_ID$WORKDIR_PHP"
 
 mutagen_sync_start() {
   mutagen_sync_terminate

@@ -2,7 +2,7 @@ version: '3'
 
 services:
     frontend:
-        volumes: &appvolumes-frontend-mac
+        volumes:
             - workspace_frontend:/var/www/html
 
     phpfpm:

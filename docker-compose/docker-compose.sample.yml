@@ -1,22 +1,30 @@
 version: '3'
 
 services:
+    nginx-frontend-proxy:
+        image: jwilder/nginx-proxy:alpine
+        ports:
+            - "${DEV_SERVER_PORT}:443"
+        volumes:
+            - ./docker/certs:/etc/nginx/certs
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+        restart: unless-stopped
+        depends_on:
+            - frontend
+
     frontend:
-        hostname: local.sufeya.com
-        build:
-            context: ./config/dockerfiles/node
-        volumes: &appvolumes-frontend
-            - ./.env:/var/www/.env:delegated
+        hostname: ${DEV_SERVER_HOST}
+        image: aleksejsb/node:14
         environment:
-            VIRTUAL_HOST: local.sufeya.com
-            VIRTUAL_PORT: 8080
+            VIRTUAL_HOST: ${DEV_SERVER_HOST}
+            VIRTUAL_PORT: ${DEV_SERVER_PORT}
         expose:
             - 8080
 
     phpfpm:
         image: devallgento/php:7.4-fpm
         ports:
-            - "2222:22"
+            - 2222:22
         volumes: &appvolumes
             - ../.composer:/var/www/.composer:delegated
             - ../.composer:/var/www/html/var/composer_home:delegated
@@ -39,7 +47,7 @@ services:
     varnish:
         image: devallgento/varnish
         ports:
-            - 8080:80
+            - 8081:80
         depends_on:
             - nginx
         environment:
@@ -50,7 +58,7 @@ services:
     nginx:
         image: modestcoders/nginx:1.13
         ports:
-            - 80:8000
+            - 8081:8000
         volumes: *appvolumes
         depends_on:
             - phpfpm
@@ -97,7 +105,7 @@ services:
         tty: true
         image: elasticsearch:7.7.1
         environment:
-            - discovery.type=single-node # may not have an effect
+            - discovery.type=single-node
             - xpack.security.enabled=false
             - ELASTIC_USERNAME=username
             - ELASTIC_PASSWORD=password

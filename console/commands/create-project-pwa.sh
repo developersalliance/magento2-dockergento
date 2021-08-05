@@ -14,9 +14,13 @@ if [ "$#" != 0 ] && [ "$1" == "--help" ]; then
   exit 0
 fi
 
-${TASKS_DIR}/start_service_if_not_running.sh ${SERVICE_FRONTEND}
+${TASKS_DIR}/start_service_if_not_running.sh ${SERVICE_FRONTEND_APP}
 
-${COMMANDS_DIR}/exec-frontend.sh yarn create @magento/pwa
+if [[ -f "${FRONTEND_DIR}/package.json" ]]; then
+    printf "${YELLOW}Project already exists. Moving to backend setup.${COLOR_RESET}\n"
+else
+    ${COMMANDS_DIR}/exec-frontend.sh yarn create @magento/pwa
+fi
 
 ${COMMANDS_DIR}/create-project.sh
 

@@ -45,6 +45,16 @@ copy_with_consent "${DOCKERGENTO_DIR}/${DOCKERGENTO_CONFIG_DIR}/" "${DOCKERGENTO
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.sample.yml" "${DOCKER_COMPOSE_FILE}"
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.linux.sample.yml" "${DOCKER_COMPOSE_FILE_LINUX}"
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.mac.sample.yml" "${DOCKER_COMPOSE_FILE_MAC}"
+copy_with_consent "${DOCKERGENTO_DIR}/config/.env" ".env"
+
+read -p "Frontend dir: [${FRONTEND_DIR}] " ANSWER_FRONTEND
+FRONTEND_DIR=${ANSWER_FRONTEND:-${FRONTEND_DIR}}
+
+if [ "${FRONTEND_DIR}" != "." ]; then
+    printf "${GREEN}Setting custom frontend paths: '${FRONTEND_DIR}'${COLOR_RESET}\n"
+    FRONTEND_DIR=$(sanitize_path "${FRONTEND_DIR}")
+    mkdir -p ${FRONTEND_DIR}
+fi
 
 read -p "Magento root dir: [${MAGENTO_DIR}] " ANSWER_MAGENTO_DIR
 MAGENTO_DIR=${ANSWER_MAGENTO_DIR:-${MAGENTO_DIR}}
@@ -92,6 +102,7 @@ fi
 
 read -p "Composer bin dir: [${BIN_DIR}] " ANSWER_BIN_DIR
 BIN_DIR=${ANSWER_BIN_DIR:-${BIN_DIR}}
+BIN_DIR=$(sanitize_path "${BIN_DIR}")
 
 printf "${GREEN}Setting bind configuration for files in git repository${COLOR_RESET}\n"
 add_git_bind_paths_in_file()
@@ -174,6 +185,7 @@ fi
 
 printf "${GREEN}Saving custom properties file: '${DOCKERGENTO_CONFIG_DIR}/properties'${COLOR_RESET}\n"
 cat << EOF > ./${DOCKERGENTO_CONFIG_DIR}/properties
+FRONTEND_DIR="${FRONTEND_DIR}"
 MAGENTO_DIR="${MAGENTO_DIR}"
 COMPOSER_DIR="${COMPOSER_DIR}"
 BIN_DIR="${BIN_DIR}"

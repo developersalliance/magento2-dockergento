@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-printf "${GREEN}Starting backend containers in detached mode${COLOR_RESET}\n"
-${DOCKER_COMPOSE} up -d ${SERVICE_APP}
+START_SERVICE=$@
 
-printf "${GREEN}Starting frontend containers in detached mode${COLOR_RESET}\n"
-${DOCKER_COMPOSE} up -d ${SERVICE_FRONTEND}
+if [ "$#" == 0 ]; then
+    printf "${GREEN}Starting backend containers in detached mode${COLOR_RESET}\n"
+    ${DOCKER_COMPOSE} up -d ${SERVICE_APP}
+
+    printf "${GREEN}Starting frontend containers in detached mode${COLOR_RESET}\n"
+    ${DOCKER_COMPOSE} up -d ${SERVICE_FRONTEND_APP}
+else
+    ${DOCKER_COMPOSE} up -d "$@"
+fi
 
 ${TASKS_DIR}/validate_bind_mounts.sh
 
@@ -19,11 +25,15 @@ if [[ "${MACHINE}" == "linux" ]]; then
 fi
 
 if [[ "${MACHINE}" == "mac" && "${USE_MUTAGEN_SYNC}" == "1" ]]; then
-    echo " > starting mutagen sync session"
-    ${TASKS_DIR}/mutagen_sync.sh start
-    printf " > mutagen sync started\n"
+    if [[ "${START_SERVICE}" == "${SERVICE_APP}" || "${START_SERVICE}" == "" ]]; then
+        echo " > starting mutagen backend sync session"
+        ${TASKS_DIR}/mutagen_sync.sh start
+        printf " > mutagen sync started\n"
+    fi
 
-    echo " > starting mutagen frontend sync session"
-    ${TASKS_DIR}/mutagen_sync_frontend.sh start
-    printf " > mutagen sync started\n"
+    if [[ "${START_SERVICE}" == "${SERVICE_FRONTEND_APP}" || "${START_SERVICE}" == "" ]]; then
+        echo " > starting mutagen frontend sync session"
+        ${TASKS_DIR}/mutagen_sync_frontend.sh start
+        printf " > mutagen sync started\n"
+    fi
 fi

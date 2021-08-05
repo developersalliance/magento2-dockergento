@@ -7,10 +7,10 @@ if ! which mutagen >/dev/null; then
   exit 1
 fi
 
-PHP_CONTAINER_ID=$(${DOCKER_COMPOSE} ps -q ${SERVICE_FRONTEND})
+FRONTEND_CONTAINER_ID=$(${DOCKER_COMPOSE} ps -q ${SERVICE_FRONTEND})
 SYNC_NAME="dockergento_frontend"
 CODE_SYNC_ALPHA="$(pwd -P)/$FRONTEND_DIR"
-CODE_SYNC_BETA="docker://$PHP_CONTAINER_ID$WORKDIR_FRONTEND/$FRONTEND_DIR"
+CODE_SYNC_BETA="docker://$FRONTEND_CONTAINER_ID$WORKDIR_FRONTEND"
 
 mutagen_sync_start() {
   mutagen_sync_terminate

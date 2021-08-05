@@ -6,7 +6,7 @@ printf "${GREEN}Rebuilding and starting containers in detached mode${COLOR_RESET
 if [ "$#" == 0 ]; then
     ${COMMANDS_DIR}/stop.sh
     ${DOCKER_COMPOSE} up --build -d ${SERVICE_APP}
-    ${DOCKER_COMPOSE} up --build -d ${SERVICE_FRONTEND}
+    ${DOCKER_COMPOSE} up --build -d ${SERVICE_FRONTEND_APP}
 else
     ${COMMANDS_DIR}/stop.sh "$@"
     ${DOCKER_COMPOSE} up --build -d "$@"
