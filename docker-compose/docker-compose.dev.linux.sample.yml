@@ -2,12 +2,12 @@ version: '3'
 
 services:
     frontend:
-        volumes: &appvolumes-linux
-            - .:/var/www/html
+        volumes: &appvolumes-frontend-linux
+            - ./frontend:/var/www/html
 
     phpfpm:
         volumes: &appvolumes-linux
-            - .:/var/www/html
+            - ./backend:/var/www/html
 
     phpfpm_xdebug:
         volumes: *appvolumes-linux

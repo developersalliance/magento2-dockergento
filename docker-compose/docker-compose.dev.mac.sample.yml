@@ -2,7 +2,7 @@ version: '3'
 
 services:
     frontend:
-        volumes: &appvolumes-mac
+        volumes: &appvolumes-frontend-mac
             - workspace_frontend:/var/www/html
 
     phpfpm:
@@ -13,9 +13,6 @@ services:
         volumes: *appvolumes-mac
 
     nginx:
-        volumes: *appvolumes-mac
-
-    node:
         volumes: *appvolumes-mac
 
 volumes:

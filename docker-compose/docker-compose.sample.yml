@@ -5,7 +5,8 @@ services:
         hostname: local.sufeya.com
         build:
             context: ./config/dockerfiles/node
-        volumes: &appvolumes
+        volumes: &appvolumes-frontend
+            - ./.env:/var/www/.env:delegated
         environment:
             VIRTUAL_HOST: local.sufeya.com
             VIRTUAL_PORT: 8080
@@ -61,18 +62,21 @@ services:
             - localswarm
 
     db:
-        image: mysql:5.7
-        ports:
-            - 3306:3306
+        image: mysql:8
+        hostname: mysql8
         environment:
             MYSQL_ROOT_PASSWORD: password
             MYSQL_DATABASE: magento
             MYSQL_USER: magento
             MYSQL_PASSWORD: magento
+        shm_size: '2gb'
+        ports:
+            - 3306:3306
         volumes:
             - dbdata:/var/lib/mysql
         networks:
             - localswarm
+        command: --default-authentication-plugin=mysql_native_password
 
     redis:
         image: redis:latest

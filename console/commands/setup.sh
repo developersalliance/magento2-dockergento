@@ -67,7 +67,7 @@ if [ "${MAGENTO_DIR}" != "." ]; then
 fi
 
 read -p "Composer dir: [${COMPOSER_DIR}] " ANSWER_COMPOSER
-COMPOSER_DIR=${ANSWER_COMPOSER:-"."}
+COMPOSER_DIR=${ANSWER_COMPOSER:-${COMPOSER_DIR}}
 
 if [ "${COMPOSER_DIR}" != "." ]; then
     printf "${GREEN}Setting custom composer paths: '${COMPOSER_DIR}'${COLOR_RESET}\n"
