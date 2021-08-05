@@ -47,16 +47,24 @@ copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.linux.sa
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.mac.sample.yml" "${DOCKER_COMPOSE_FILE_MAC}"
 copy_with_consent "${DOCKERGENTO_DIR}/config/.env" ".env"
 
-read -p "Frontend dir: [${FRONTEND_DIR}] " ANSWER_FRONTEND
+read -p "Frontend container dir: [${FRONTEND_DIR}] " ANSWER_FRONTEND
 FRONTEND_DIR=${ANSWER_FRONTEND:-${FRONTEND_DIR}}
 
 if [ "${FRONTEND_DIR}" != "." ]; then
     printf "${GREEN}Setting custom frontend paths: '${FRONTEND_DIR}'${COLOR_RESET}\n"
     FRONTEND_DIR=$(sanitize_path "${FRONTEND_DIR}")
-    mkdir -p ${FRONTEND_DIR}
 fi
 
-read -p "Magento root dir: [${MAGENTO_DIR}] " ANSWER_MAGENTO_DIR
+read -p "Frontend host dir: [${FRONTEND_HOST_DIR}] " ANSWER_HOST_FRONTEND
+FRONTEND_HOST_DIR=${ANSWER_HOST_FRONTEND:-${FRONTEND_HOST_DIR}}
+
+if [ "${FRONTEND_HOST_DIR}" != "." ]; then
+    printf "${GREEN}Setting custom frontend paths: '${FRONTEND_HOST_DIR}'${COLOR_RESET}\n"
+    FRONTEND_HOST_DIR=$(sanitize_path "${FRONTEND_HOST_DIR}")
+    mkdir -p ${FRONTEND_HOST_DIR}
+fi
+
+read -p "Magento container dir: [${MAGENTO_DIR}] " ANSWER_MAGENTO_DIR
 MAGENTO_DIR=${ANSWER_MAGENTO_DIR:-${MAGENTO_DIR}}
 
 if [ "${MAGENTO_DIR}" != "." ]; then
@@ -76,7 +84,16 @@ if [ "${MAGENTO_DIR}" != "." ]; then
     printf "${COLOR_RESET}"
 fi
 
-read -p "Composer dir: [${COMPOSER_DIR}] " ANSWER_COMPOSER
+read -p "Magento host dir: [${MAGENTO_HOST_DIR}] " ANSWER_HOST_MAGENTO
+MAGENTO_HOST_DIR=${ANSWER_HOST_MAGENTO:-${MAGENTO_HOST_DIR}}
+
+if [ "${MAGENTO_HOST_DIR}" != "." ]; then
+    printf "${GREEN}Setting custom magento paths: '${MAGENTO_HOST_DIR}'${COLOR_RESET}\n"
+    MAGENTO_HOST_DIR=$(sanitize_path "${MAGENTO_HOST_DIR}")
+    mkdir -p ${MAGENTO_HOST_DIR}
+fi
+
+read -p "Composer container dir: [${COMPOSER_DIR}] " ANSWER_COMPOSER
 COMPOSER_DIR=${ANSWER_COMPOSER:-${COMPOSER_DIR}}
 
 if [ "${COMPOSER_DIR}" != "." ]; then
@@ -90,19 +107,26 @@ if [ "${COMPOSER_DIR}" != "." ]; then
     printf "${COLOR_RESET}\n"
 fi
 
-if [ ! -f "${COMPOSER_DIR}/composer.json" ]; then
-    printf "${GREEN}Creating non existing '${COMPOSER_DIR}/composer.json'${COLOR_RESET}\n"
-    mkdir -p ${COMPOSER_DIR}
-    echo "{}" > ${COMPOSER_DIR}/composer.json
+read -p "Composer host dir: [${COMPOSER_HOST_DIR}] " ANSWER_HOST_COMPOSER
+COMPOSER_HOST_DIR=${ANSWER_HOST_COMPOSER:-${COMPOSER_HOST_DIR}}
+
+if [ "${COMPOSER_HOST_DIR}" != "." ]; then
+    printf "${GREEN}Setting custom composer paths: '${COMPOSER_HOST_DIR}'${COLOR_RESET}\n"
+    COMPOSER_HOST_DIR=$(sanitize_path "${COMPOSER_HOST_DIR}")
 fi
-if [ ! -f "${COMPOSER_DIR}/composer.lock" ]; then
-    printf "${GREEN}Creating non existing '${COMPOSER_DIR}/composer.lock'${COLOR_RESET}\n"
-    echo "{}" > ${COMPOSER_DIR}/composer.lock
+
+if [ ! -f "${COMPOSER_HOST_DIR}/composer.json" ]; then
+    printf "${GREEN}Creating non existing '${COMPOSER_HOST_DIR}/composer.json'${COLOR_RESET}\n"
+    mkdir -p ${COMPOSER_HOST_DIR}
+    echo "{}" > ${COMPOSER_HOST_DIR}/composer.json
+fi
+if [ ! -f "${COMPOSER_HOST_DIR}/composer.lock" ]; then
+    printf "${GREEN}Creating non existing '${COMPOSER_HOST_DIR}/composer.lock'${COLOR_RESET}\n"
+    echo "{}" > ${COMPOSER_HOST_DIR}/composer.lock
 fi
 
 read -p "Composer bin dir: [${BIN_DIR}] " ANSWER_BIN_DIR
 BIN_DIR=${ANSWER_BIN_DIR:-${BIN_DIR}}
-BIN_DIR=$(sanitize_path "${BIN_DIR}")
 
 printf "${GREEN}Setting bind configuration for files in git repository${COLOR_RESET}\n"
 add_git_bind_paths_in_file()
@@ -185,8 +209,11 @@ fi
 
 printf "${GREEN}Saving custom properties file: '${DOCKERGENTO_CONFIG_DIR}/properties'${COLOR_RESET}\n"
 cat << EOF > ./${DOCKERGENTO_CONFIG_DIR}/properties
+FRONTEND_HOST_DIR="${FRONTEND_HOST_DIR}"
 FRONTEND_DIR="${FRONTEND_DIR}"
+MAGENTO_HOST_DIR="${MAGENTO_HOST_DIR}"
 MAGENTO_DIR="${MAGENTO_DIR}"
+COMPOSER_HOST_DIR="${COMPOSER_HOST_DIR}"
 COMPOSER_DIR="${COMPOSER_DIR}"
 BIN_DIR="${BIN_DIR}"
 COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME}"

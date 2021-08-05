@@ -1,8 +1,11 @@
-MAGENTO_DIR="./backend"
-FRONTEND_DIR="./frontend"
-COMPOSER_DIR="./backend"
-BIN_DIR="./backend/vendor/bin"
-GENERATED_DIR="./backend/generated"
+FRONTEND_HOST_DIR="./frontend"
+FRONTEND_DIR="."
+MAGENTO_HOST_DIR="./backend"
+MAGENTO_DIR="."
+COMPOSER_HOST_DIR="./backend"
+COMPOSER_DIR="."
+BIN_DIR="./vendor/bin"
+GENERATED_DIR="./generated"
 
 HOST_DIR="."
 

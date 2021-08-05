@@ -61,14 +61,14 @@ echo ""
 COMPOSER_EDITION_NEEDED=false
 if [[ "${MAGENTO_DIR}" != "${COMPOSER_DIR}" ]]; then
   COMPOSER_EDITION_NEEDED=true
-  printf "${YELLOW}Warning:${COLOR_RESET} magento dir is not the same as composer dir\n"
+  printf "${YELLOW}Warning:${COLOR_RESET} container magento dir is not the same as composer dir\n"
   echo "  Magento dir: '${MAGENTO_DIR}'"
   echo "  Composer dir: '${COMPOSER_DIR}'"
 fi
 
 if [[ "${MAGENTO_DIR}/vendor/bin" != "${BIN_DIR}" ]]; then
   COMPOSER_EDITION_NEEDED=true
-  printf "${YELLOW}Warning:${COLOR_RESET} bin dir is not inside magento dir\n"
+  printf "${YELLOW}Warning:${COLOR_RESET} container bin dir is not inside magento dir\n"
   echo "  Magento dir: '${MAGENTO_DIR}'"
   echo "  Bin dir: '${BIN_DIR}'"
 fi

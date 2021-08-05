@@ -6,28 +6,29 @@ services:
         ports:
             - "${DEV_SERVER_PORT}:443"
         volumes:
-            - ./docker/certs:/etc/nginx/certs
+#            - ./docker/certs:/etc/nginx/certs
             - /var/run/docker.sock:/tmp/docker.sock:ro
         restart: unless-stopped
         depends_on:
             - frontend
 
     frontend:
+        tty: true
         hostname: ${DEV_SERVER_HOST}
         image: aleksejsb/node:14
         environment:
             VIRTUAL_HOST: ${DEV_SERVER_HOST}
             VIRTUAL_PORT: ${DEV_SERVER_PORT}
         expose:
-            - 8080
+            - ${DEV_SERVER_PORT}
 
     phpfpm:
         image: devallgento/php:7.4-fpm
         ports:
-            - 2222:22
+            - "2222:22"
         volumes: &appvolumes
             - ../.composer:/var/www/.composer:delegated
-            - ../.composer:/var/www/html/var/composer_home:delegated
+#            - ../.composer:/var/www/html/var/composer_home:delegated
             - ./config/dockergento/nginx/conf/default.conf:/var/www/conf/nginx/default.conf:delegated
         environment:
             PHP_IDE_CONFIG: serverName=localhost

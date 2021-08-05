@@ -16,7 +16,7 @@ fi
 
 ${TASKS_DIR}/start_service_if_not_running.sh ${SERVICE_FRONTEND_APP}
 
-if [[ -f "${FRONTEND_DIR}/package.json" ]]; then
+if [[ -f "${FRONTEND_HOST_DIR}/package.json" ]]; then
     printf "${YELLOW}Project already exists. Moving to backend setup.${COLOR_RESET}\n"
 else
     ${COMMANDS_DIR}/exec-frontend.sh yarn create @magento/pwa

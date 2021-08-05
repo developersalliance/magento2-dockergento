@@ -4,9 +4,9 @@ set -euo pipefail
 mirror_vendor_host_into_container()
 {
     printf "${GREEN}Mirror vendor into container before executing composer${COLOR_RESET}\n"
-    if [ ! -d "${MAGENTO_DIR}/vendor" ]; then
-        echo " > creating '${MAGENTO_DIR}/vendor' in host"
-        mkdir -p "${MAGENTO_DIR}/vendor"
+    if [ ! -d "${MAGENTO_HOST_DIR}/vendor" ]; then
+        echo " > creating '${MAGENTO_HOST_DIR}/vendor' in host"
+        mkdir -p "${MAGENTO_HOST_DIR}/vendor"
     fi
     ${COMMANDS_DIR}/mirror-host.sh vendor
 }
@@ -19,8 +19,8 @@ sync_all_from_container_to_host()
     ${COMMANDS_DIR}/stop.sh
 
     printf "${GREEN}Copying all files from container to host${COLOR_RESET}\n"
-    echo " > removing vendor in host: '${HOST_DIR}/${MAGENTO_DIR}/vendor/*'"
-    rm -rf ${HOST_DIR}/${MAGENTO_DIR}/vendor/*
+    echo " > removing vendor in host: '${HOST_DIR}/${MAGENTO_HOST_DIR}/vendor/*'"
+    rm -rf ${HOST_DIR}/${MAGENTO_HOST_DIR}/vendor/*
 
     echo " > copying '${SERVICE_PHP}:${WORKDIR_PHP}/.' into '${HOST_DIR}'"
     CONTAINER_ID=$(${DOCKER_COMPOSE} ps -q ${SERVICE_PHP})
@@ -59,7 +59,7 @@ then
     VALIDATION_OUTPUT=$(${COMMANDS_DIR}/exec.sh composer validate ${COMPOSER_DIR_OPTION}) \
      || if [ $? == 1 ]; then echo "${VALIDATION_OUTPUT}"; exit 1; fi
 
-    MAGENTO2_MODULE_PATH="${MAGENTO_DIR}/vendor/magento/magento2-base"
+    MAGENTO2_MODULE_PATH="${MAGENTO_HOST_DIR}/vendor/magento/magento2-base"
     MAGENTO_EXISTS_IN_CONTAINER=$(${COMMANDS_DIR}/exec.sh sh -c "[ -f ${MAGENTO2_MODULE_PATH}/composer.json ] && echo true || echo false")
     MAGENTO_EXISTS_IN_HOST=$([ -f ${MAGENTO2_MODULE_PATH}/composer.json ] && echo true || echo false)
     if [[ ${MAGENTO_EXISTS_IN_HOST} == true && ${MAGENTO_EXISTS_IN_CONTAINER} == *false* ]]; then
