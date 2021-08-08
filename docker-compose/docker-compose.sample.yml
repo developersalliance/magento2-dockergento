@@ -6,21 +6,29 @@ services:
         ports:
             - "${DEV_SERVER_PORT}:443"
         volumes:
-#            - ./docker/certs:/etc/nginx/certs
+            - ./config/ssl/certificates:/etc/nginx/certs
             - /var/run/docker.sock:/tmp/docker.sock:ro
         restart: unless-stopped
         depends_on:
             - frontend
+        networks:
+            - localswarm
 
     frontend:
         tty: true
         hostname: ${DEV_SERVER_HOST}
-        image: aleksejsb/node:14
+        image: aleksejsb/node:14-ssl
+        volumes:
+            - ./config/ssl:/usr/src/ssl:rw
         environment:
             VIRTUAL_HOST: ${DEV_SERVER_HOST}
             VIRTUAL_PORT: ${DEV_SERVER_PORT}
+            DEV_SERVER_HOST: ${DEV_SERVER_HOST}
+            SSL_CERTIFICATE_PATH: ${SSL_CERTIFICATE_PATH}
         expose:
             - ${DEV_SERVER_PORT}
+        networks:
+            - localswarm
 
     phpfpm:
         image: devallgento/php:7.4-fpm
@@ -28,7 +36,6 @@ services:
             - "2222:22"
         volumes: &appvolumes
             - ../.composer:/var/www/.composer:delegated
-#            - ../.composer:/var/www/html/var/composer_home:delegated
             - ./config/dockergento/nginx/conf/default.conf:/var/www/conf/nginx/default.conf:delegated
         environment:
             PHP_IDE_CONFIG: serverName=localhost

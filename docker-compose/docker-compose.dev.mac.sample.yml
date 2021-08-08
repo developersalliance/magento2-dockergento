@@ -3,7 +3,7 @@ version: '3'
 services:
     frontend:
         volumes:
-            - workspace_frontend:/var/www/html
+            - workspace_frontend:/usr/src/app
 
     phpfpm:
         volumes: &appvolumes-mac

@@ -2,6 +2,7 @@
 set -euo pipefail
 
 DOCKERGENTO_CONFIG_DIR="config/dockergento"
+SSL_CONFIG_DIR="config/ssl"
 
 copy_with_consent()
 {
@@ -42,6 +43,7 @@ sed_in_file()
 
 printf "${GREEN}Setting up dockergento config files${COLOR_RESET}\n"
 copy_with_consent "${DOCKERGENTO_DIR}/${DOCKERGENTO_CONFIG_DIR}/" "${DOCKERGENTO_CONFIG_DIR}"
+copy_with_consent "${DOCKERGENTO_DIR}/${SSL_CONFIG_DIR}/" "${SSL_CONFIG_DIR}"
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.sample.yml" "${DOCKER_COMPOSE_FILE}"
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.linux.sample.yml" "${DOCKER_COMPOSE_FILE_LINUX}"
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.mac.sample.yml" "${DOCKER_COMPOSE_FILE_MAC}"
