@@ -162,7 +162,7 @@ dockergento create-project
 </details>
 
 ```
-git clone https://github.com/magento/magento2.git
+git clone https://github.com/developersalliance/magento2-dockergento
 cd magento2
 dockergento setup
 ```
