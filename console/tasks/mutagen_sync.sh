@@ -12,6 +12,10 @@ SYNC_NAME="dockergento"
 CODE_SYNC_ALPHA="$(pwd -P)/$MAGENTO_DIR"
 CODE_SYNC_BETA="docker://$PHP_CONTAINER_ID$WORKDIR_PHP/$MAGENTO_DIR"
 
+if [[ ! -z "${WORKDIR_HOST}" ]]; then
+    CODE_SYNC_BETA="$WORKDIR_HOST:$WORKDIR_PHP/$MAGENTO_DIR"
+fi
+
 mutagen_sync_start() {
   mutagen_sync_terminate
 

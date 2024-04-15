@@ -20,7 +20,7 @@ if [[ "${MACHINE}" == "linux" ]]; then
     echo " > permissions fix finished"
 fi
 
-if [[ "${MACHINE}" == "mac" && "${USE_MUTAGEN_SYNC}" == "1" ]]; then
+if [[ "${MACHINE}" == "mac" && "${USE_MUTAGEN_SYNC}" == "1" || ! -z "${WORKDIR_HOST}" ]]; then
     echo " > starting mutagen sync session"
     ${TASKS_DIR}/mutagen_sync.sh start
     printf " > mutagen sync started\n"
