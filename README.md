@@ -43,7 +43,11 @@ If you do not like reading and prefer watching videos. Check out all video tutor
 
 ## Installation
 
-You only need 3 things on your local machine: `git`, `docker` and `dockergento`
+You only need 3 things on your local machine: `git`, `docker`, `dockergento` and `mutagen`
+
+### Install Mutagen
+
+https://webinstall.dev/mutagen/
 
 ### Install Docker
 
@@ -187,6 +191,10 @@ Open `http://<your-domain>` in the browser 🎉
 See detailed documentation about development workflow with dockergento
 
 * [Development Workflow](docs/workflow.md)
+
+### Remote development
+
+* [Remote Development](docs/remote_development.md)
 
 ---
 
