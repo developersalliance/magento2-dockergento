@@ -8,7 +8,9 @@ if [ "${MACHINE}" == "linux" ]; then
     elif grep -q microsoft-standard /proc/version; then #WSL2
         XDEBUG_HOST=host.docker.internal
     else
-        if [ "$(command -v ip)" ]; then
+        if [[ ! -z "${WORKDIR_HOST}" ]]; then
+            XDEBUG_HOST=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
+        elif [ "$(command -v ip)" ]; then
             XDEBUG_HOST=$(ip addr show docker0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
         else
             XDEBUG_HOST=$(ifconfig docker0 | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1)
