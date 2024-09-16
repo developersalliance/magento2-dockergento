@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   phpfpm:
     image: devallgento/php:7.1-fpm
