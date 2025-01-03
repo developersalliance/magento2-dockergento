@@ -29,10 +29,10 @@ overwrite_file_consent() {
 overwrite_file_consent "${COMPOSER_DIR}/composer.json"
 overwrite_file_consent ".gitignore"
 
-AVAILABLE_MAGENTO_EDITIONS="community enterprise"
+AVAILABLE_MAGENTO_EDITIONS="community enterprise mageos"
 DEFAULT_MAGENTO_EDITION="community"
 
-read -p "Magento edition (community/enterprise [$DEFAULT_MAGENTO_EDITION]): " MAGENTO_EDITION
+read -p "Magento edition (community/enterprise/mageos [$DEFAULT_MAGENTO_EDITION]): " MAGENTO_EDITION
 
 if [[ $MAGENTO_EDITION == '' ]]; then
   MAGENTO_EDITION=$DEFAULT_MAGENTO_EDITION
@@ -43,13 +43,17 @@ if ! $(${TASKS_DIR}/in_list.sh "${MAGENTO_EDITION}" "${AVAILABLE_MAGENTO_EDITION
   exit 1
 fi
 
-read -p "Magento version: " MAGENTO_VERSION
+read -p "Magento/MageOS version: " MAGENTO_VERSION
 
 ${TASKS_DIR}/start_service_if_not_running.sh ${SERVICE_APP}
 
 CREATE_PROJECT_TMP_DIR="dockergento-create-project-tmp"
 ${COMMANDS_DIR}/exec.sh sh -c "rm -rf ${CREATE_PROJECT_TMP_DIR}/*"
-${COMMANDS_DIR}/exec.sh composer create-project --no-install --repository=https://repo.magento.com/ magento/project-${MAGENTO_EDITION}-edition ${CREATE_PROJECT_TMP_DIR} ${MAGENTO_VERSION}
+if  [[ "${MAGENTO_EDITION}" == "mageos" ]]; then
+  ${COMMANDS_DIR}/exec.sh composer create-project --no-install --repository=https://repo.mage-os.org/ mage-os/project-community-edition ${CREATE_PROJECT_TMP_DIR} ${MAGENTO_VERSION}
+else
+  ${COMMANDS_DIR}/exec.sh composer create-project --no-install --repository=https://repo.magento.com/ magento/project-${MAGENTO_EDITION}-edition ${CREATE_PROJECT_TMP_DIR} ${MAGENTO_VERSION}
+fi
 
 echo " > Copying project files into host"
 ${COMMANDS_DIR}/exec.sh sh -c "cat ${CREATE_PROJECT_TMP_DIR}/composer.json > ${COMPOSER_DIR}/composer.json"
