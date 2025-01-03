@@ -42,7 +42,17 @@ sed_in_file()
 
 printf "${GREEN}Setting up dockergento config files${COLOR_RESET}\n"
 copy_with_consent "${DOCKERGENTO_DIR}/${DOCKERGENTO_CONFIG_DIR}/" "${DOCKERGENTO_CONFIG_DIR}"
-copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.sample.yml" "${DOCKER_COMPOSE_FILE}"
+
+ARCH=$(uname -m)
+
+# Determine the appropriate docker-compose file
+if [[ "$ARCH" == "arm"* || "$ARCH" == "aarch64" ]]; then
+    copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.arm.sample.yml" "${DOCKER_COMPOSE_FILE}"
+    echo "Detected ARM architecture ($ARCH). Using docker-compose.arm.sample.yml."
+else
+    copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.sample.yml" "${DOCKER_COMPOSE_FILE}"
+    echo "Non-ARM architecture ($ARCH) detected. Using docker-compose.sample.yml."
+fi
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.linux.sample.yml" "${DOCKER_COMPOSE_FILE_LINUX}"
 copy_with_consent "${DOCKERGENTO_DIR}/docker-compose/docker-compose.dev.mac.sample.yml" "${DOCKER_COMPOSE_FILE_MAC}"
 
@@ -140,8 +150,16 @@ else
 fi
 
 echo "PHP version:"
-DEFAULT_PHP_VERSION="7.1"
-AVAILABLE_PHP_VERSIONS="7.0 7.1 7.2 7.3 7.4 8.1 8.2"
+
+# Determine the appropriate docker-compose file
+if [[ "$ARCH" == "arm"* || "$ARCH" == "aarch64" ]]; then
+  DEFAULT_PHP_VERSION="8.2"
+  AVAILABLE_PHP_VERSIONS="7.2 7.3 7.4 8.1 8.2"
+else
+  DEFAULT_PHP_VERSION="7.1"
+  AVAILABLE_PHP_VERSIONS="7.0 7.1 7.2 7.3 7.4 8.1 8.2"
+fi
+
 select PHP_VERSION in ${AVAILABLE_PHP_VERSIONS}; do
     if $(${TASKS_DIR}/in_list.sh "${PHP_VERSION}" "${AVAILABLE_PHP_VERSIONS}"); then
         break

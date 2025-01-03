@@ -1,0 +1,134 @@
+services:
+  phpfpm:
+    image: vandeveon/php:8.2-fpm-arm
+    volumes: &appvolumes
+      - ./config/dockergento/nginx/conf/:/var/www/conf/nginx/:delegated
+    environment:
+      PHP_IDE_CONFIG: serverName=localhost
+    depends_on:
+      - db
+    networks:
+      - localswarm
+
+  phpfpm_xdebug:
+    image: vandeveon/php:8.2-fpm-arm
+    volumes: *appvolumes
+    depends_on:
+      - phpfpm
+    networks:
+      - localswarm
+
+  varnish:
+    image: devallgento/varnish
+    ports:
+      - 8080:80
+    depends_on:
+      - nginx
+    environment:
+      - VIRTUAL_PORT=80
+    networks:
+      - localswarm
+
+  nginx:
+    image: vandeveon/nginx:1.13-arm
+    ports:
+      - 80:8000
+    volumes: *appvolumes
+    depends_on:
+      - phpfpm
+      - phpfpm_xdebug
+      - mailhog
+      - elasticsearch
+    networks:
+      - localswarm
+
+  db:
+    image: mariadb:10.6
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: magento
+      MYSQL_USER: magento
+      MYSQL_PASSWORD: magento
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - localswarm
+
+  node:
+    image: vandeveon/node-php:node14-php8.2-arm
+    ports:
+      - 35729:35729
+    volumes: *appvolumes
+    depends_on:
+      - phpfpm
+      - phpfpm_xdebug
+    networks:
+      - localswarm
+
+  redis:
+    image: redis:latest
+    networks:
+      - localswarm
+    volumes:
+      - rddata:/data
+
+  adminer:
+    image: adminer
+    networks:
+      - localswarm
+    ports:
+      - 8090:8080
+
+  mailhog:
+    image: jcalonso/mailhog:latest
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - localswarm
+
+  elasticsearch:
+    tty: true
+    image: elasticsearch:8.7.0
+    environment:
+      - discovery.type=single-node # may not have an effect
+      - xpack.security.enabled=false
+      - ELASTIC_USERNAME=username
+      - ELASTIC_PASSWORD=password
+    ports:
+      - 9200:9200
+    networks:
+      - localswarm
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  kibana:
+    image: barasher/kibana-arm:7.8.0
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    networks:
+      - localswarm
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 15672:15672
+      - 5672:5672
+    networks:
+      - localswarm
+
+volumes:
+  dbdata:
+  rddata:
+  esdata:
+
+networks:
+  localswarm:
